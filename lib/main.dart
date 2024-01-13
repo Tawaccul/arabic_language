@@ -1,18 +1,53 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_quran_words/games/drag_and_drop_level.dart';
-import 'package:flutter_quran_words/games/find_word.dart';
-import 'package:flutter_quran_words/games/full_word_level.dart';
-import 'package:flutter_quran_words/games/game_6.dart';
-import 'package:flutter_quran_words/games/game_swipe.dart';
-import 'package:flutter_quran_words/pages/homeScreen/home_screen.dart';
-import 'package:flutter_quran_words/pages/home_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 
-void main()  {
+import 'package:flutter/material.dart';
+import 'package:flutter_quran_words/games/other/collect_word.dart';
+import 'package:flutter_quran_words/games/collect_word/controller.dart';
+import 'package:flutter_quran_words/games/collect_word/home_page.dart';
+import 'package:flutter_quran_words/games/missing_word/context_word.dart';
+import 'package:flutter_quran_words/games/other/find_word.dart';
+import 'package:flutter_quran_words/games/puzzle_word/gamewithcontainers.dart';
+import 'package:flutter_quran_words/games/pages/games_main_page.dart';
+import 'package:flutter_quran_words/pages/homeScreen/home_screen.dart';
+import 'package:flutter_quran_words/games/other/puzzle_word.dart';
+import 'package:flutter_quran_words/pages/home_page.dart';
+import 'package:flutter_quran_words/games/quiz/models/db_connects.dart';
+import 'package:flutter_quran_words/games/quiz/models/question_models.dart';
+import 'package:flutter_quran_words/games/quiz/pages/main_questions_page.dart';
+import 'package:provider/provider.dart';
+import 'auth/firebase_options.dart';
+import 'package:flutter_quran_words/games/other/drag_and_drop_level.dart';
+import 'package:flutter_quran_words/games/other/full_word_level.dart';
+import 'package:flutter_quran_words/games/match_game/match_game.dart';
+import 'package:flutter_quran_words/games/swipe_game/game_swipe.dart';
+
+
+void main()  async {
+  var db = DBconnect();
+  //db.addQuestion(
+    // Questions(
+    // id: '20', 
+    // title: 'First Surah from Quran?', 
+    // options: {
+    //   'Fatiha': true,
+    //   'Baqarah' : false,
+    //   'Maryam' : false,
+    //   'An-nisa' : false
+    // })
+    // 
+    db.fetchQuestions();
+    ;
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  
-  runApp( MyApp());
-}
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
+runApp(ChangeNotifierProvider(
+      create: (_) => Controller(), child:  MyApp()));}
 
 class MyApp extends StatelessWidget {
  
@@ -36,12 +71,12 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => MyHomeScreen(),
+        '/': (context) =>  GamesMainPage(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/firstgame': (context) => FirstTypeOfGame(),
-        '/secondgame': (context) => const FullWord(),
+        '/secondgame': (contewxt) => const FullWord(),
         '/thirdgame': (context) => const SwipeGame(),
-        '/sixsgame': (context) => const SixGame()
+        '/sixsgame': (context) =>  GamesMainPage()
       },
     );
   }

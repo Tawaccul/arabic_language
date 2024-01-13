@@ -37,6 +37,18 @@ dependencies:
   cupertino_icons: ^1.0.2
   line_awesome_flutter: ^2.0.0
   dotted_border: ^2.1.0
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  google_sign_in: ^6.2.1
+  cloud_firestore: ^4.13.6
+  http: ^1.1.2
+  firebase_auth_web: ^5.8.12
+  gestures: ^1.0.0
+  flame: ^1.13.1
+  provider: ^6.1.1
+  audioplayers: ^5.2.1
+  bloc: ^8.1.2
+
 
 dev_dependencies:
   flutter_test:
@@ -61,9 +73,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - lib/images/Qaaba.jpg
-   - lib/images/Google.png
-   - lib/images/Apple.png
+   - assets/audios/correct1.mp3
+   - assets/audios/correct2.mp3
+   - assets/images/Qaaba.jpg
+   - assets/images/Google.png
+   - assets/images/Apple.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

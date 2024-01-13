@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "559145442622",
+    "project_id": "auth-8ba19",
+    "storage_bucket": "auth-8ba19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559145442622:android:6236ac51e37c607436a06f",
+        "android_client_info": {
+          "package_name": "com.example.flutter_quran_words"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559145442622-3s0v9t47rmq50bg6aegmbresida3t25v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi3Py2t9c4nTh30NAJ5K8dmVq3ssZz1EE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559145442622-3s0v9t47rmq50bg6aegmbresida3t25v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

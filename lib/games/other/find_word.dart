@@ -20,16 +20,21 @@ class _AlphabetPuzzleState extends State<AlphabetPuzzle>
     "cat",
     "wolf",
   ];
+
   /// List of Images
   List<String> imageUrls = [
     "https://images.pexels.com/photos/163077/mario-yoschi-figures-funny-163077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
     "https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
     "https://as1.ftcdn.net/v2/jpg/02/48/64/04/1000_F_248640483_5KAZi0GqcWrBu6GOhFEAxk1quNEuOzHJ.jpg",
   ];
+
   List<String> alphabet = [];
   List<String> userAnswers = [];
   late AnimationController _animationController;
   late Animation<double> _animation;
+  int currentLetterIndex = 0;
+
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +43,7 @@ class _AlphabetPuzzleState extends State<AlphabetPuzzle>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+
     _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -56,9 +62,30 @@ class _AlphabetPuzzleState extends State<AlphabetPuzzle>
     alphabet.shuffle();
     userAnswers = List.filled(answers[currentPuzzle].length, '');
   }
+
+ void handleLetterPress(String pressedLetter) {
+  setState(() {
+    // Удаляем букву, если она уже была в списке
+    userAnswers.remove(pressedLetter);
+    // Вставляем букву на первое место
+    userAnswers.insert(0, pressedLetter);
+    // Если userAnswers уже заполнен, удаляем последнюю букву, чтобы остаться в пределах ответа
+    if (userAnswers.length > answers[currentPuzzle].length) {
+      userAnswers.removeLast();
+    }
+    currentLetterIndex++;
+  });
+}
+
+
   /// Check Answer
-  void checkAnswer() {
-    if (userAnswers.join('') == answers[currentPuzzle]) {
+ void checkAnswer() {
+  // Проверяем, что порядок букв в userAnswers совпадает с порядком в answers
+  bool isCorrect = List.generate(userAnswers.length, (index) {
+    return userAnswers[index] == answers[currentPuzzle][index];
+  }).every((element) => element);
+
+  if (isCorrect) {
       showDialog(
         context: context,
         builder: (BuildContext context) {

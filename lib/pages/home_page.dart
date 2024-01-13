@@ -7,10 +7,10 @@ import 'package:flutter_quran_words/widgets/bottom_menu.dart';
 
 class MyHomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _MyHomeScreenState createState() => _MyHomeScreenState();
 }
 
-class _HomeScreenState extends State<MyHomeScreen> {
+class _MyHomeScreenState extends State<MyHomeScreen> {
   static final List<Widget> _pages = [
     HomeScreen(),
     const DictionaryScreen(),
@@ -86,7 +86,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         width: MediaQuery.of(context).size.width / 3,
         child: Icon(
           icon,
-          color: index == selectedIndex ? Color.fromARGB(255, 65, 152, 84) : Color.fromARGB(255, 42, 72, 95),
+          color: index == selectedIndex ? Colors.greenAccent : Color.fromARGB(255, 42, 72, 95),
           size: 35,
         ),
       ),
@@ -98,7 +98,7 @@ class HomeScr extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: HomeScreen(),
+      child: MyHomeScreen(),
     );
   }
 }

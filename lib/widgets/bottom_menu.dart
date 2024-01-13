@@ -11,7 +11,7 @@ class BottomMenu extends StatefulWidget {
 
 }
 
-  class _BottomMenuState extends State<BottomMenu> {
+class _BottomMenuState extends State<BottomMenu> {
 
 static const List<Widget> _pages = <Widget>[
   Icon(
