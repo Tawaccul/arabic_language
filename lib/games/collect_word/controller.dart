@@ -1,15 +1,18 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quran_words/games/collect_word/home_page.dart';
+import 'package:flutter_quran_words/games/pages/games_main_page.dart';
 
 import 'all_words.dart';
 import 'message_box.dart';
+
+
+
 
 class Controller extends ChangeNotifier {
   int totalLetters = 0, lettersAnswered = 0, wordsAnswered = 0;
   bool generateWord = true, sessionCompleted = false, letterDropped = false;
   double percentCompleted = 0;
-
-  final audioCache = AudioPlayer();
 
   setUp({required int total}) {
     lettersAnswered = 0;
@@ -21,22 +24,14 @@ class Controller extends ChangeNotifier {
     lettersAnswered++;
     updateLetterDropped(dropped: true);
     if (lettersAnswered == totalLetters) {
-       audioCache.play(AssetSource('assets/audios/correct1.mp3'));
-      
       wordsAnswered++;
       percentCompleted = wordsAnswered / allWords.length;
       if (wordsAnswered == allWords.length) {
         sessionCompleted = true;
+       GameProvider().switchToNextGame();
+        print('FINISH');
+        notifyListeners();
       }
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (_) => MessageBox(
-          sessionCompleted: sessionCompleted,
-        ),
-      );
-    } else {
-      audioCache.play(AssetSource('assets/audios/correct2.mp3'));
     }
     notifyListeners();
   }

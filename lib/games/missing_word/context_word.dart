@@ -89,7 +89,7 @@ class _MissingWordGameState extends State<MissingWordGame> {
       _displayedPart = _russianSentence.split(_missingWord)[0] + '...';
     });
 
-    if (currentWord == 3) {
+    if (currentWord == 4) {
       currentStep++;
 
       // Notify the parent widget that the game is completed
@@ -123,16 +123,12 @@ void _checkAnswer(String selectedOption) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Пропущенное слово'),
-      ),
+      backgroundColor: const Color.fromRGBO(241, 253, 241, 100),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GlobalProgressBar(value: maxSteps, steps: currentStep),
-
             SizedBox(height: 100,),
             Directionality(
               textDirection: TextDirection.ltr,

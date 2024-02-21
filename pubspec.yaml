@@ -48,6 +48,9 @@ dependencies:
   provider: ^6.1.1
   audioplayers: ^5.2.1
   bloc: ^8.1.2
+  animated_background: ^2.0.0
+  draggable_widget: ^2.0.0
+  vibration: ^1.8.4
 
 
 dev_dependencies:

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_quran_words/games/collect_word/fly_in_animation.dart';
 import 'package:flutter_quran_words/games/collect_word/progress_bar.dart';
 import 'package:flutter_quran_words/games/pages/games_main_page.dart';
@@ -12,31 +13,27 @@ import 'drop.dart';
 
 
 class CollectWordGame extends StatefulWidget {
-   VoidCallback onGameCompleted;
-
+  final VoidCallback onGameCompleted;
   CollectWordGame({Key? key, required this.onGameCompleted}) : super(key: key);
 
   @override
-  State<CollectWordGame> createState() => _CollectWordGameState();
-  
-  void onCurrentGameCompleted() {
-    // Этот метод будет вызываться, когда текущая игра завершится
-    _CollectWordGameState? state = _collectWordGameStateKey.currentState;
-    state?.handleGameCompleted();
-  }
+  State<CollectWordGame> createState() => CollectWordGameState();
+
 }
 
-GlobalKey<_CollectWordGameState> _collectWordGameStateKey = GlobalKey();
+GlobalKey<CollectWordGameState> _collectWordGameStateKey = GlobalKey();
 
+  bool _isGameCompleted = false;
 
-class _CollectWordGameState extends State<CollectWordGame> implements GameChangeListener {
+class CollectWordGameState extends State<CollectWordGame>  {
   List<String> _words = allWords.toList();
   late String _word, _dropWord;
-  late GameProgressManager _gameProgressManager;
 
-   void handleGameCompleted() {
-    // Вызовем метод, переданный в виджете, при завершении текущей игры
-    widget.onGameCompleted();
+
+
+@override
+  void initState() {
+    super.initState();
   }
 
   _generateWord() {
@@ -61,25 +58,25 @@ class _CollectWordGameState extends State<CollectWordGame> implements GameChange
           .updateLetterDropped(dropped: false);
     });
 
-
+     
   } 
+
 
 
   @override
   Widget build(BuildContext context) {
     return Selector<Controller, bool>(
       selector: (_, controller) => controller.generateWord,
-      builder: (_, generate, __) {
-        if (generate) {
-          if (_words.isNotEmpty) {
-            _generateWord();
-          }
+      builder: (_, generate, controller) {
+        if (generate && _words.isNotEmpty) {
+        _generateWord();
         }
+        
         return SafeArea(
           child: Stack(
             children: [
               Container(
-                color: Colors.lightBlue,
+                color: const Color.fromARGB(255, 241, 255, 241),
               ),
               Column(
                 children: [
@@ -90,7 +87,7 @@ class _CollectWordGameState extends State<CollectWordGame> implements GameChange
                         padding: const EdgeInsets.all(12.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 195, 189, 170),
+                            color: Color.fromARGB(255, 255, 253, 246),
                             borderRadius: BorderRadius.circular(60),
                           ),
                           child: Row(
@@ -120,9 +117,8 @@ class _CollectWordGameState extends State<CollectWordGame> implements GameChange
                                         removeScale: true,
                                         animate: dropped,
                                         animationCompleted:
-                                            _animationCompleted(),
-                                        child: Image.asset(
-                                            'assets/images/Qaaba.jpg')),
+                                       _animationCompleted(),
+                                        child: Text('d')),
                                   ),
                                 ),
                               )
@@ -146,7 +142,7 @@ class _CollectWordGameState extends State<CollectWordGame> implements GameChange
                       flex: 3,
                       child: FlyInAnimation(
                           animate: true,
-                          child: Image.asset('assets/images/Qaaba.jpg'))),
+                          child: Text('f'))),
                   Expanded(
                     flex: 3,
                     child: Row(
@@ -163,7 +159,6 @@ class _CollectWordGameState extends State<CollectWordGame> implements GameChange
                           .toList(),
                     ),
                   ),
-                  const Expanded(flex: 1, child: ProgressBar()),
                 ],
               ),
             ],
@@ -171,15 +166,5 @@ class _CollectWordGameState extends State<CollectWordGame> implements GameChange
         );
       },
     );
-  }
-  
-  @override
-  void onAllGamesCompleted() {
-    // TODO: implement onAllGamesCompleted
-  }
-  
-  @override
-  void onGameChanged(int gameIndex) {
-    // TODO: implement onGameChanged
   }
 }

@@ -1,64 +1,81 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
+import 'package:vibration/vibration.dart';
 import 'package:flutter/services.dart';
 
 
 class DrawPatternGame extends StatefulWidget {
-  const DrawPatternGame({Key? key}) : super(key: key);
-
+  final VoidCallback onGameCompleted;
+  const DrawPatternGame({required this.onGameCompleted});
   @override
   State<DrawPatternGame> createState() => _DrawPatternGameState();
 }
 
 class _DrawPatternGameState extends State<DrawPatternGame> {
-  List<String> stringList = ["E", "L", "A", "K", "İ", "N", "U", "G"];
+  List<String> stringList = ["E", "L", "A", "K", "İ", "N", "U", "G", "D"];
   List<String> selectedLetter = [];
-
+  String finalWordFromBase = 'LAN';
   double radius = 80;
   List<Offset> endLineOffsetList = [];
   List<Offset> letterOffsetList = [];
 
+  LinearGradient _backgroundGradient = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [
+        Color.fromRGBO(241, 253, 241, 100),
+        Color.fromRGBO(241, 253, 241, 100),
+    ],
+  );
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.greenAccent,
-      appBar: AppBar(
-        title: Text("Draw Game"),
-      ),
-      body: Column(
+      body: 
+      Container(
+ decoration: BoxDecoration(
+              gradient: _backgroundGradient,
+            ),        child:
+      Column(
+        
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Container(
-            height: 300,
+            height: 400,
             child: Center(
                 child: Container(
               padding: selectedLetter.isNotEmpty
                   ? EdgeInsets.fromLTRB(8, 8, 8, 0)
                   : EdgeInsets.zero,
               decoration: BoxDecoration(
-                  color: Colors.pink, borderRadius: BorderRadius.circular(32)),
+                  color: const Color.fromRGBO(195, 252, 186, 1), borderRadius: BorderRadius.circular(0)),
               child: Text(
                 selectedLetter.toSet().join(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  letterSpacing: 8,
+                  letterSpacing: 10,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             )),
           ),
-          Center(
+          Container(
+            
             child: GestureDetector(
+              
               onPanStart: (details) {
+
                 Offset correctedOffset = Offset(details.localPosition.dx - 104,
                     details.localPosition.dy - 104);
                 for (var i = 0; i < letterOffsetList.length; i++) {
                   if ((correctedOffset - (letterOffsetList[i])).distance < 24 &&
                       !selectedLetter.contains(stringList[i])) {
                     selectedLetter.add(stringList[i]);
+                                      Vibration.vibrate(duration: 50); // 50 миллисекунд вибрации, можно изменить по вашему усмотрению
+
                     print(stringList[i]);
 
                     endLineOffsetList
@@ -71,6 +88,7 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                 }
               },
               onPanUpdate: (details) {
+
                 if (endLineOffsetList.isNotEmpty &&
                     selectedLetter.length < stringList.length) {
                   Offset correctedOffset = Offset(
@@ -84,7 +102,8 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                         !selectedLetter.contains(stringList[i])) {
                       endLineOffsetList[endLineOffsetList.length - 1] =
                           letterOffsetList[i];
-                      selectedLetter.add(stringList[i]);
+                      selectedLetter.add(stringList[i]);                  Vibration.vibrate(duration: 50); // 50 миллисекунд вибрации, можно изменить по вашему усмотрению
+
                       endLineOffsetList.add(letterOffsetList[i]);
                       print(stringList[i]);
                       Feedback.forTap(context);
@@ -100,26 +119,27 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                
 
                 setState(() {
-
+                
                   String finalWord = selectedLetter.join();
-                  showDialog(context: context, builder: (context) => AlertDialog(
-                    title: Text("Sonuç"),
-                    content: Text(finalWord),
-                    actions: [
-                      TextButton(onPressed: () {
-                        Navigator.pop(context);
-                      }, child: Text("Tamam"))
-                    ],
-                  ));
+                  print(finalWord);
+
+                  if(finalWord == finalWordFromBase){
+                    print('it ok');
+                  }
+                  
     selectedLetter = [];
      endLineOffsetList = [];
                 });
               },
-              child: Stack(
+              child:
+              Container(
+                child:  Stack(
                 alignment: Alignment.center,
+                
                 children: [
                   CircleAvatar(
-                    radius: radius + 32,
+                    backgroundColor: Color.fromRGBO(241, 253, 241, 0.341),
+                    radius: radius + 42,
                   ),
                   CustomPaint(
                     painter: LinePainter(endLineOffsetList: endLineOffsetList),
@@ -127,21 +147,33 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                   ...List.generate(
                     stringList.length,
                     (i) {
-                      letterOffsetList.add(Offset(
-                          radius *
-                              math.cos(2 * i * math.pi / stringList.length),
-                          radius *
-                              math.sin(2 * i * math.pi / stringList.length)));
+                      double xOffset;
+    double yOffset;
+    if (i < 3) {
+      // Левый столбец
+      xOffset = -radius;
+      yOffset = radius - i * (2 * radius / 2);
+    } else if (i < 6) {
+      // Средний столбец
+      xOffset = 0;
+      yOffset = radius - (i - 3) * (2 * radius / 2);
+    } else {
+      // Правый столбец
+      xOffset = radius;
+      yOffset = radius - (i - 6) * (2 * radius / 2);
+    }
+
+    letterOffsetList.add(Offset(xOffset, yOffset));
                       return Transform.translate(
                         offset: letterOffsetList[i],
                         child: CircleAvatar(
                           backgroundColor:
                               selectedLetter.contains(stringList[i])
-                                  ? Colors.pink
-                                  : null,
+                                  ? const Color.fromRGBO(195, 252, 186, 1)
+                                  : Color.fromARGB(104, 218, 218, 218),
                           child: Container(
-                            width: 40,
-                            height: 402,
+                            width: 42,
+                            height: 42,
                             child: Container ( 
                               child: Text(
                               stringList[i],
@@ -158,12 +190,12 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                     },
                   )
                 ],
-              ),
+              )),
             ),
           )
         ],
       ),
-    );
+    ));
   }
 }
 
@@ -172,8 +204,9 @@ class LinePainter extends CustomPainter {
   LinePainter({this.endLineOffsetList});
   @override
   void paint(Canvas canvas, Size size) {
+  
     var paint = Paint()
-      ..color = Colors.pink
+      ..color = Color.fromARGB(255, 28, 213, 0)
       ..strokeWidth = 5
       ..strokeCap = StrokeCap.round;
     if (endLineOffsetList != null && endLineOffsetList!.length >= 2) {

@@ -1,141 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quran_words/components/progress_bar.dart';
 import 'package:flutter_quran_words/games/collect_word/home_page.dart';
-import 'package:flutter_quran_words/games/match_game/match_game.dart';
+import 'package:flutter_quran_words/games/match_game/pages/match_game.dart';
 import 'package:flutter_quran_words/games/missing_word/context_word.dart';
+import 'package:flutter_quran_words/games/puzzle_word/gamewithcontainers.dart';
+
+import '../collect_word/controller.dart';
 
 class GamesMainPage extends StatefulWidget {
   @override
-  _GamesMainPageState createState() => _GamesMainPageState();
+  GamesMainPageState createState() => GamesMainPageState();
 }
 
-class _GamesMainPageState extends State<GamesMainPage>  implements GameChangeListener{
-  GameProgressManager gameProgressManager = GameProgressManager();
-
+class GamesMainPageState extends State<GamesMainPage>  {
   late List<Widget> games;
   int currentGameIndex = 0;
   int progress = 0;
-  int totalSteps = 15;
+  int totalSteps = 5;
+  late Controller controller;
+
+  late GameProvider gameProvider; // Add this line
 
   @override
   void initState() {
     super.initState();
-   
-   gameProgressManager.setGameChangeListener(this);
-  
-     games = [
-    // Здесь добавьте ваши игры
-    MissingWordGame(onGameCompleted: switchToNextGame,),
-     MatchGame(onGameCompleted: switchToNextGame,),
-     CollectWordGame(onGameCompleted: switchToNextGame,),
-    // PuzzleGame(),
-    // SwipeGame(),
-    // MainQuestionsPage()
-  ];
+    gameProvider = GameProvider(); // Initialize GameProvider
+    games = [
+      Container(),
+      MissingWordGame(onGameCompleted: switchToNextGame),
+      MatchGame(onGameCompleted: switchToNextGame),
+      CollectWordGame( onGameCompleted: switchToNextGame),
+      DrawPatternGame(onGameCompleted: switchToNextGame),
+    ];
 
     switchToNextGame();
   }
 
-   void switchToNextGame() {
+  Future<void> switchToNextGame() async {
+    await Future.delayed(Duration(seconds: 1));
+
     setState(() {
-      if (currentGameIndex < totalSteps -1  ) {
+      if (currentGameIndex < totalSteps - 1) {
         currentGameIndex++;
       } else {
         currentGameIndex = 0; // Loop back to the first game
       }
-      
-        if (progress < totalSteps) {
-        // Check if the current game is CollectWordGame and subscribe to its completion
-        if (games[currentGameIndex] is CollectWordGame) {
-          (games[currentGameIndex] as CollectWordGame).onGameCompleted = switchToNextGame;
-        }
-
       progress++;
-    }});
+
+      // Call switchToNextGame of GameProvider
+      gameProvider.switchToNextGame();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Game Switcher'),
-      ),
+      backgroundColor: const Color.fromRGBO(241, 253, 241, 100),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Container(
+              padding: EdgeInsets.all(20), child: GlobalProgressBar(value: progress, steps: totalSteps)),
           Expanded(
-            child:
-          games[currentGameIndex]),
+              child: games.isNotEmpty ? games[currentGameIndex] : Text('пусто')) ,
           SizedBox(height: 20),
-          LinearProgressIndicator(
-            value: progress / totalSteps,
-          ),
         ],
       ),
     );
   }
-  
-
-  @override
-  void dispose() {
-    // Remove this page as the listener when the widget is disposed
-   gameProgressManager.setGameChangeListener(this);
-    super.dispose();
-  }
-
-  @override
-  void onGameChanged(int gameIndex) {
-    // Switch to the next game based on the index
-    setState(() {
-      currentGameIndex = gameIndex;
-    });
-  }
-  
-  @override
-  void onAllGamesCompleted() {
-    // TODO: implement onAllGamesCompleted
-  }
 }
 
 
-class GameProgressManager {
-  static final GameProgressManager _instance = GameProgressManager._internal();
 
-  factory GameProgressManager() {
-    return _instance;
-  }
+class GameProvider extends ChangeNotifier {
+  int _currentGameIndex = -1;
+  int _totalGames = 5;
 
-  GameProgressManager._internal();
-
-  int currentGameIndex = 0;
-  int totalGames = 3;
-
-  GameChangeListener? _gameChangeListener;
-
-  void setGameChangeListener(GameChangeListener listener) {
-    _gameChangeListener = listener;
-  }
+  int get currentGameIndex => _currentGameIndex;
 
   void switchToNextGame() {
-    currentGameIndex++;
+    _currentGameIndex++;
 
-    if (currentGameIndex < totalGames) {
-      if (_gameChangeListener != null) {
-        _gameChangeListener!.onGameChanged(currentGameIndex);
-      } else {
-        print("GameChangeListener is not set.");
-      }
+    if (_currentGameIndex < _totalGames) {
+      notifyListeners(); // Notify listeners to trigger a rebuild
     } else {
-      if (_gameChangeListener != null) {
-        _gameChangeListener!.onAllGamesCompleted();
-      } else {
-        print("GameChangeListener is not set.");
-      }
+      // All games completed, you can perform the appropriate actions
+      print('All games completed');
     }
   }
-}
-
-abstract class GameChangeListener {
-  void onGameChanged(int gameIndex);
-  void onAllGamesCompleted();
 }

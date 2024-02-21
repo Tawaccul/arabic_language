@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_quran_words/pages/homeScreen/home_screen.dart';
+import 'package:flutter_quran_words/pages/homePage/Screens/homeScreen/home_screen.dart';
 import 'package:flutter_quran_words/pages/settingsScreen/settings_main_screen.dart';
 import 'package:flutter_quran_words/pages/words/dictionary_screen.dart';
 import 'package:flutter_quran_words/widgets/bottom_menu.dart';

@@ -59,7 +59,6 @@ Route _createRoute() {
   @override
   void initState() {
     super.initState();
-    startTimer();
     _wordList = Database().matchWords;
     _setupCurrentWord();
   }
@@ -75,19 +74,24 @@ Route _createRoute() {
 
 
 
-  void _handleAnswer() {
-    // Check if the collected letters form the correct word
-    String collectedWord = container.join();
-    
-    if (collectedWord == _currentWord!.join()) {
-      // Handle correct answer
-    } else {
-      // Handle incorrect answer
-    }
 
-    _generateRandomWord();
+void _handleAnswer() {
+  // Проверка каждой буквы в ответе
+  for (int i = 0; i < _currentWord!.length; i++) {
+    String collectedLetter = container[i] ?? '';
+    String correctLetter = _currentWord![i];
+
+    if (collectedLetter == correctLetter) {
+      // Handle correct answer for each letter
+    } else {
+      // Handle incorrect answer for each letter
+      // Скрыть неправильно перетащенную букву
+      container[i] = null;
+    }
   }
 
+  _generateRandomWord();
+}
  void _generateRandomWord() {
     setState(() {
       // Reset indices and prepare for the next word
@@ -102,20 +106,7 @@ Route _createRoute() {
     });
   }
 
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (secondsRemaining > 0) {
-          secondsRemaining--;
-        } else {
-          // Таймер истек, сброс игры и таймера
-          resetGame();
-          timer.cancel();
-          _showResults();
-        }
-      });
-    });
-  }
+
 
   
   void _showResults() {
@@ -170,18 +161,16 @@ Route _createRoute() {
 
   
 
-  @override
+    @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Move Letters'),
       ),
-       body: Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Display the letters of the current word
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _currentWord!.map((letter) {
@@ -216,53 +205,37 @@ Route _createRoute() {
             }).toList(),
           ),
 
-          
-
-       Container(
-  height: 50,
-  width: 400,
-  color: Colors.grey,
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: List.generate(container.length, (index) {
-      return DragTarget<String>(
-        builder: (context, candidateData, rejectedData) {
-          return Container(
-            height: 30,
-            width: 30,
-            child: Center(
-              child: Text(
-                container[index] ?? '',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
+          Container(
+            height: 50,
+            width: 400,
+            color: Colors.grey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(container.length, (index) {
+                return DragTarget<String>(
+                  builder: (context, candidateData, rejectedData) {
+                    return Container(
+                      height: 30,
+                      width: 30,
+                      child: Center(
+                        child: Text(
+                          container[index] ?? '',
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
+                  onWillAccept: (data) => true, // Всегда принимаем буквы
+                  onAccept: (data) {
+                    // Обновляем контейнер с буквами
+                    setState(() {
+                      container[index] = data;
+                    });
+                  },
+                );
+              }),
             ),
-          );
-        },
-        onWillAccept: (data) => container[index] == null,
-       onAccept: (data) {
-  if (nextIndex < _currentWord!.length && data == _currentWord![nextIndex]) {
-    setState(() {
-      container[index] = data;
-      nextIndex++;
-      if (nextIndex == _currentWord!.length) {
-        // All letters of the word are collected, proceed to the next word
-        _wordsIndex++;
-        nextIndex = 0;
-        if (_wordsIndex < _wordList.length) {
-          _setupCurrentWord();
-        } else {
-          // All words are completed
-          _showResults();
-        }
-      }
-    });
-  }
-},
-
-      );
-    }),
-  ),
-),
+          ),
           Text(
             'Time remaining: $secondsRemaining seconds',
             style: TextStyle(fontSize: 18),

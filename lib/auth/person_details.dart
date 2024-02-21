@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quran_words/pages/homeScreen/home_screen.dart';
+import 'package:flutter_quran_words/pages/homePage/Screens/homeScreen/home_screen.dart';
 import 'package:flutter_quran_words/pages/home_page.dart';
 
 class AdditionalDetailsPage extends StatefulWidget {

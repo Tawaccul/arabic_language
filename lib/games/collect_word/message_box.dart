@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quran_words/games/collect_word/home_page.dart';
+import 'package:flutter_quran_words/games/pages/games_main_page.dart';
 import 'package:provider/provider.dart';
 
 import 'controller.dart';
@@ -38,9 +39,7 @@ class MessageBox extends StatelessWidget {
           ),
           onPressed: () {
             if (sessionCompleted) {
-              Provider.of<Controller>(context, listen: false).reset();
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) =>  CollectWordGame(onGameCompleted: (){})));
+              
             } else {
               Provider.of<Controller>(context, listen: false)
                   .requestWord(request: true);

@@ -34,8 +34,8 @@ class Drop extends StatelessWidget {
           } else {
             return Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: const Color.fromARGB(255, 72, 69, 58),
+                
+                color: Color.fromARGB(255, 201, 198, 187),
               ),
               width: 100,
               height: 70,
