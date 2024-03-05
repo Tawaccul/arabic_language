@@ -49,8 +49,9 @@ void main()  async {
   );
 runApp(ChangeNotifierProvider(
       create: (_) => Controller(), child:  MyApp()));}
-
-class MyApp extends StatelessWidget {
+ 
+ 
+ class MyApp extends StatelessWidget {
  
 
   // This widget is the root of your application.
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => DrawPatternGame( onGameCompleted: (){},),
+        '/': (context) => MyHomeScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/firstgame': (context) => FirstTypeOfGame(),
         '/secondgame': (contewxt) => const FullWord(),

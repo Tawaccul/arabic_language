@@ -305,7 +305,6 @@ class _AlphabetPuzzleState extends State<AlphabetPuzzle>
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          primary: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: const Text(

@@ -77,7 +77,9 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                                       Vibration.vibrate(duration: 50); // 50 миллисекунд вибрации, можно изменить по вашему усмотрению
 
                     print(stringList[i]);
-
+int? bar;
+ bool? foo;
+ print(bar != foo);
                     endLineOffsetList
                       ..add(letterOffsetList[i])
                       ..add(letterOffsetList[i]);
@@ -124,7 +126,7 @@ class _DrawPatternGameState extends State<DrawPatternGame> {
                   print(finalWord);
 
                   if(finalWord == finalWordFromBase){
-                    print('it ok');
+                    widget.onGameCompleted();
                   }
                   
     selectedLetter = [];

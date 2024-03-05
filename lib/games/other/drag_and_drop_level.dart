@@ -25,7 +25,7 @@ class _PuzzleState extends State<FirstTypeOfGame> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          body: Container(
+       body: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

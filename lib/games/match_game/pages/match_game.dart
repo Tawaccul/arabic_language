@@ -28,7 +28,8 @@ class _MatchGameState extends State<MatchGame> with TickerProviderStateMixin {
 
   late int score;
   late bool gameOver;
-  var _matchGame = Database().matchWords;
+  var _matchGame = Database().matchWords; 
+  
 
   late ItemModel selectedArabicWord;
   late ItemModel selectedRussianWord;
@@ -156,7 +157,6 @@ void initGame() {
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
           shadowColor: const Color.fromARGB(0, 105, 240, 175),
-          onPrimary: Colors.amber,
           foregroundColor: const Color.fromRGBO(17, 51, 86, 0.8),
           backgroundColor: item == selectedArabicWord || item == selectedRussianWord
           

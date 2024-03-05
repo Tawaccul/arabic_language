@@ -164,8 +164,6 @@ void _checkAnswer(String selectedOption) {
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     foregroundColor: Colors.white,
-                    primary: Colors.greenAccent,
-                    onPrimary: Colors.black,
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),

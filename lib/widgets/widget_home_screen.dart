@@ -12,41 +12,45 @@ class WidgetsOnHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-  height: 200,
-  child: Stack(
+    child:   Row( 
+        children: [
+          SizedBox(width: 10,),
+       Container( 
+      child: Container (
+   child: Stack(
     children: [
       // Background Image
         Container( 
           child: 
-            Image.network(
-              '$_img' ?? 'https://default-image-url.jpg', // 'https://th.bing.com/th/id/OIP.6pZZtsXnN-X0b4d5wbueuQHaHW?rs=1&pid=ImgDetMain
+            Image.asset(
+              'assets/images/Frame.png' ?? 'assets/images/Frame.png', // 'https://th.bing.com/th/id/OIP.6pZZtsXnN-X0b4d5wbueuQHaHW?rs=1&pid=ImgDetMain
                 fit: BoxFit.cover,
-       height: 200,
-        width: 200,
+       height: 120,
+        width: 140,
           )
       ),
       // Content Container
       Container(
-        height: 200,
-        width: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          border: Border.all(width: 1, color: Color.fromRGBO(196, 252, 185, 1.0)),
-        ),
+        height: 120,
+        width: 140,
+
         child: Column(
           children: <Widget>[
             SizedBox(height: 10),
-            Text(
+            Container( 
+              height: 100,
+              child: Text(
+              textAlign: TextAlign.left,
               _title,
-              style: TextStyle(fontSize: 25, color: Colors.black, ),
+              style: TextStyle(fontSize: 16, color: Color.fromRGBO(17, 51, 86, 1) ),
               key: Key('title_key'),
-            ),
+            )),
           ],
         ),
       ),
     ],
   ),
-);
+      ))]));
 
     
   }

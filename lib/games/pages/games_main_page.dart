@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_quran_words/components/progress_bar.dart';
 import 'package:flutter_quran_words/games/collect_word/home_page.dart';
@@ -16,24 +18,29 @@ class GamesMainPageState extends State<GamesMainPage>  {
   late List<Widget> games;
   int currentGameIndex = 0;
   int progress = 0;
-  int totalSteps = 5;
+  int totalSteps = 10;
   late Controller controller;
 
   late GameProvider gameProvider; // Add this line
 
-  @override
+@override
   void initState() {
     super.initState();
-    gameProvider = GameProvider(); // Initialize GameProvider
+    gameProvider = GameProvider();
     games = [
-      Container(),
       MissingWordGame(onGameCompleted: switchToNextGame),
-      MatchGame(onGameCompleted: switchToNextGame),
-      CollectWordGame( onGameCompleted: switchToNextGame),
       DrawPatternGame(onGameCompleted: switchToNextGame),
+      MatchGame(onGameCompleted: switchToNextGame),
+      // CollectWordGame( onGameCompleted: switchToNextGame),
     ];
 
+    shuffleGames(); // Shuffle the games initially
     switchToNextGame();
+  }
+
+  void shuffleGames() {
+    final random = Random();
+    games.shuffle(random);
   }
 
   Future<void> switchToNextGame() async {
@@ -44,10 +51,10 @@ class GamesMainPageState extends State<GamesMainPage>  {
         currentGameIndex++;
       } else {
         currentGameIndex = 0; // Loop back to the first game
+        shuffleGames(); // Shuffle the games for the next round
       }
       progress++;
 
-      // Call switchToNextGame of GameProvider
       gameProvider.switchToNextGame();
     });
   }
@@ -61,9 +68,10 @@ class GamesMainPageState extends State<GamesMainPage>  {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-              padding: EdgeInsets.all(20), child: GlobalProgressBar(value: progress, steps: totalSteps)),
+              padding: EdgeInsets.all(20),
+              child: GlobalProgressBar(value: progress, steps: totalSteps)),
           Expanded(
-              child: games.isNotEmpty ? games[currentGameIndex] : Text('пусто')) ,
+              child: games.isNotEmpty ? games[currentGameIndex] : Text('пусто')),
           SizedBox(height: 20),
         ],
       ),
@@ -71,11 +79,9 @@ class GamesMainPageState extends State<GamesMainPage>  {
   }
 }
 
-
-
 class GameProvider extends ChangeNotifier {
   int _currentGameIndex = -1;
-  int _totalGames = 5;
+  int _totalGames = 4;
 
   int get currentGameIndex => _currentGameIndex;
 
